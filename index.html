@@ -46,16 +46,17 @@
 				});
 		},
 		onEachFeature: function (feature, layer) {
-			if (feature.properties && feature.properties.Title && feature.properties.Location) {
+			//if (feature.properties && feature.properties.Title && feature.properties.Location) {
 				layer.bindPopup(feature.properties.Title + feature.properties.Location);
-    			}
+    			//}
 		}
 	});
 	//layer contain searched elements
 	map.addLayer(muralLayer);
 	var muraldata = omnivore.csv ('test.csv', null, muralLayer).addTo(map);
 	muraldata.on('ready', function() {
-		map.fitBounds(muralLayer.getBounds())
+		map.fitBounds(muralLayer.getBounds());
+		console.log(muralLayer)
 	});
 </script>
 </body>
