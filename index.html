@@ -48,7 +48,9 @@
 	//layer contain searched elements
 	map.addLayer(muralLayer);
 	var muraldata = omnivore.csv ('test.csv', null, muralLayer).addTo(map);
-
+	muraldata.on('ready', function() {
+		map.fitBounds(muralLayer.getBounds())
+	});
 </script>
 </body>
 </html>
