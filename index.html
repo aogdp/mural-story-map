@@ -46,9 +46,9 @@
 				});
 		},
 		onEachFeature: function (feature, layer) {
-			//if (feature.properties && feature.properties.Title && feature.properties.Location) {
+			if (feature.properties && feature.properties.Title && feature.properties.Location) {
 				layer.bindPopup(feature.properties.Title + feature.properties.Location);
-    			//}
+    			}
 		}
 	});
 	//layer contain searched elements
