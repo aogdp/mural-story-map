@@ -34,9 +34,20 @@
 	}).addTo(map);
 	
 	//CSV LOAD- Features
-	var markersLayer = new L.geoJson();	//layer contain searched elements
-	map.addLayer(markersLayer);
-	var muraldata = omnivore.csv('test.csv').addTo(map);
+	var muralLayer = new L.geoJson(null, {
+		pointToLayer: function (feature, latlng) {
+				return L.circleMarker(latlng, {
+					radius: 8,
+					fillColor: "#ff7800",
+					color: "#000",
+					weight: 1,
+					opacity: 1,
+					fillOpacity: 0.8
+				});
+}});
+	//layer contain searched elements
+	map.addLayer(muralLayer);
+	var muraldata = omnivore.csv ('test.csv', null, muralLayer).addTo(map);
 
 </script>
 </body>
