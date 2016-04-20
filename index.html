@@ -44,7 +44,13 @@
 					opacity: 1,
 					fillOpacity: 0.8
 				});
-}});
+		},
+		onEachFeature: function (feature, layer) {
+			if (feature.properties && feature.properties.Title && feature.properties.Location) {
+				layer.bindPopup(feature.properties.Title + feature.properties.Location);
+    			}
+		}
+	});
 	//layer contain searched elements
 	map.addLayer(muralLayer);
 	var muraldata = omnivore.csv ('test.csv', null, muralLayer).addTo(map);
