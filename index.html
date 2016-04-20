@@ -48,7 +48,8 @@
 		},
 		onEachFeature: function (feature, layer) {
 			if (feature.properties && feature.properties.Title && feature.properties.Location) {
-				layer.bindPopup(feature.properties.Title + " " + feature.properties.Location);
+				var url = feature.properties.Image;
+				layer.bindPopup('<img src="' + url + '"><br/>' + feature.properties.Title + ' ' + feature.properties.Location);
     			}
 		}
 	});
