@@ -1,238 +1,66 @@
-<!doctype><html><head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Odyssey.js Scroll</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Search GeoJson Example | Stripped Down</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-  <link rel="icon" type="image/x-icon" href="http://cartodb.github.io/odyssey.js/sandbox/favicon.png">
-  <link rel="icon" type="image/png" href="http://cartodb.github.io/odyssey.js/sandbox/favicon.png">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-  <link rel="stylesheet" href="http://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/themes/css/cartodb.css">
-  <link rel="stylesheet" href="http://cartodb.github.io/odyssey.js/sandbox/css/scroll.css">
-  <script src="http://cartodb.github.io/odyssey.js/vendor/modernizr-2.6.2.min.js"></script>
+<!--Font Awesome CDN and Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!--Leaflet -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+<!-- Leaflet Omnivore Plugin GeoJson KML Etc -->
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+
+<!-- leaflet ajax geojson loader -->
+<script src="../plugins/leaflet.ajax.min.js"></script>
+
+<!--Search Control Features -->
+<link rel="stylesheet" href="../plugins/leaflet-search.css" />
+<script src="../plugins/leaflet-search.js"></script>
+
+<style>
+#map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
 </head>
 <body>
-  <div id="layout">
-    <!--<div class="progress-bar"></div>-->
+<div id="map"></div>
 
-    <div class="inner-header">
-      <div id="header"></div>
-    </div>
-
-    <div id="map_pos">
-      <div id="map_container">
-        <div id="map"></div>
-      </div>
-    </div>
-
-    <div id="content"></div>
-
-    <div id="credits">
-      <span class="title" id="title">Title</span>
-      <span class="author"><b id="author">By Name using</b> <a href="#">Odyssey.js</a><span>
-    </span></span></div>
-  </div> <!-- layout -->
-
-  <script src="http://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/cartodb.js"></script>
-  <script src="http://cartodb.github.io/odyssey.js/dist/odyssey.js" charset="UTF-8"></script>
-
-  <script>
-    O.Template({
-      init: function() {
-        var baseurl = this.baseurl = 'http://{s}.api.cartocdn.com/base-light/{z}/{x}/{y}.png';
-        var map = this.map = L.map('map',{
-          center: [0, 0],
-          zoom: 4
-        });
-
-        this.map.scrollWheelZoom.disable();
-
-        var basemap = this.basemap = L.tileLayer(baseurl, {
-          attribution: 'data OSM - map CartoDB'
-        }).addTo(map);
-
-        var story = O.Story()
-
-        this.story = story;
-        this.miniprogressbar = O.MiniProgressBar();
-
-        // trigger when  map_pos go out of the screen
-        this.edge = O.Edge(
-          O.Triggers.Scroll().less('map_pos').offset(0),
-          O.Triggers.Scroll().greater('map_pos').offset(0)
-        )
-      },
-
-      update: function(actions) {
-        var self = this;
-
-        this.story.clear();
-
-        if (this.baseurl && (this.baseurl !== actions.global.baseurl)) {
-          this.baseurl = actions.global.baseurl || 'http://0.api.cartocdn.com/base-light/{z}/{x}/{y}.png';
-
-          this.basemap.setUrl(this.baseurl);
-        }
-
-        if (this.cartoDBLayer && ("http://"+self.cartoDBLayer.options.user_name+".cartodb.com/api/v2/viz/"+self.cartoDBLayer.options.layer_definition.stat_tag+"/viz.json" !== actions.global.vizjson)) {
-          this.map.removeLayer(this.cartoDBLayer);
-
-          this.cartoDBLayer = null;
-          this.created = false;
-        }
-
-        if (actions.global.vizjson && !this.cartoDBLayer) {
-          if (!this.created) { // sendCode debounce < vis loader
-            cdb.vis.Loader.get(actions.global.vizjson, function(vizjson) {
-              self.map.fitBounds(vizjson.bounds);
-
-              cartodb.createLayer(self.map, vizjson)
-                .done(function(layer) {
-                  self.cartoDBLayer = layer;
-
-                  var sublayer = layer.getSubLayer(0),
-                      layer_name = layer.layers[0].options.layer_name,
-                      filter = actions.global.cartodb_filter ? " WHERE "+actions.global.cartodb_filter : "";
-
-                  sublayer.setSQL("SELECT * FROM "+layer_name+filter)
-
-                  self.map.addLayer(layer);
-
-                  self._resetActions(actions);
-                }).on('error', function(err) {
-                  console.log("some error occurred: " + err);
-                });
-            });
-
-            this.created = true;
-          }
-
-          return;
-        }
-
-        this._resetActions(actions);
-      },
-
-      _resetActions: function(actions) {
-        // update footer title and author
-        var title_ = actions.global.title === undefined ? '' : actions.global.title,
-            author_ = actions.global.author === undefined ? 'Using' : 'By '+actions.global.author+' using';
-
-        document.getElementById('title').innerHTML = title_;
-        document.getElementById('author').innerHTML = author_;
-        document.title = title_ + " | " + author_ +' Odyssey.js';
-
-        var TRIGGER_LINE = this.map.getSize().y + 50;
-        this.story.addEvent(
-          this.edge,
-          O.Parallel(
-            O.Actions.CSS($('#map_container')).toggleClass('attachTop'),
-            O.Actions.CSS($('#content')).toggleClass('attachMap'),
-            O.Actions.Debug().log('attach')
-          )
-        )
-
-        // create content
-        var content = '';
-
-        var slide_ = actions[0];
-        $('#header').html(slide_.html());
-
-        this.story
-          .addState(
-            O.Scroll().within($('#header')),
-            slide_(this)
-          );
-
-        for(var i = 1; i < actions.length; ++i) {
-          var slide = actions[i];
-          content += "<div id='s_" + i +"'>" + slide.html() + "</div>";
-        }
-
-        $('#content').html(content);
-
-        // first slide is the header, skip it
-        for(var i = 1; i < actions.length; ++i) {
-          var slide = actions[i];
-          this.story.addState(
-            O.Triggers.Scroll().within('s_' + i).offset(TRIGGER_LINE),
-            O.Parallel(
-              slide(this),
-              this.miniprogressbar.percent(100*i/(actions.length - 1))
-            )
-          )
-        }
-
-        if(window.scrollY === 0) {
-          this.story.go(0);
-        }
-      }
-    });
-  </script>
-
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-20934186-21', 'cartodb.github.io');
-    ga('send', 'pageview');
-  </script>
-
-
-<script id="md_template" type="text/template">```
--baseurl: "http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
--title: "AOGDP Mural Story Map"
--author: "AOGDP"
-```
-
-#Appalachian Murals
-```
-- center: [39.53888781, -82.5471557]
-- zoom: 5
-L.marker([37.7620, -122.4385]).actions.addRemove(S.map)
-```
-
-Follow along to see murals throughout Appalachian Ohio 
-
-
-#An Overview of the Region
-```
--  center: [39.13888781, -82.5471557]
-- zoom: 9
-L.marker([40.7348, -73.9970]).actions.addRemove(S.map)
-```
-
-There are x Mural sites located throughout Appalachian Ohio
-
-
-#Portsmouth Floodwall Murals
-```
-- center: [38.730565, -83.000282]
-- zoom: 13
-```
-
-This would show a panoramic or listing of images at this location or site
-
-![Portsmouth](http://www.ohiorivertourism.org/murals1.jpg)
-
-#Exporting your story
-```
-- center: [40.4469, -28.5645]
-- zoom: 3
-```
-
-You have different options for exporting your odyssey.js visualization. You can either embed this using an iframe, publishing with a click on bl.ocks or just share the URL of this visualization.
-
-If you want to customize it further, you can download the generated source code by clicking on the button below.
-
-#Advanced users
-
-Check out our [documentation](/odyssey.js/documentation/) to learn how to use odyssey to create more custom things. It's crazy the amount of cool things that can be done with the library.
-
-Also if you are a developer, take a look at our contributing guideline so you can push code to the actual library.
-
-Cheers!
-</script></body></html>
+<script>
+	var map = new L.Map('map', {zoom: 13, center: new L.latLng([39.668858, -82.8037639]) });
+	
+	var OpenStreetMap_BlackAndWhite = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+	
+	//GeoJson Features
+     	var addresses = new L.GeoJSON.AJAX('../data/fair_address.geojson', {
+     		style: function(feature) {
+			return {color: "#900000"};
+		},
+		pointToLayer: function(feature, latlng) {
+			return new L.CircleMarker(latlng, {radius: 8, fillOpactiy: 0.8});
+		},
+		onEachFeature: function(feature, layer) {
+			layer.bindPopup(feature.properties.LSN)
+		}
+	}).addTo(map);
+//	var searchControl = new L.Control.Search({layer: addresses, propertyName: 'LSN', circleLocation:true});
+//	map.addControl( searchControl ); 
+	
+	//CSV Features
+	var markersLayer = new L.LayerGroup();	//layer contain searched elements
+	map.addLayer(markersLayer);
+	var planes = omnivore.csv('/test.csv').addTo(map);
+	//var searchControlcsv = new L.Control.Search({layer: planes, initial: false});
+ //     	map.addControl(searchControlcsv);
+</script>
+</body>
+</html>
