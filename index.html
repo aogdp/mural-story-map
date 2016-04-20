@@ -33,27 +33,11 @@
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(map);
 	
-	//GeoJson Features
-     	var addresses = new L.GeoJSON.AJAX('../data/fair_address.geojson', {
-     		style: function(feature) {
-			return {color: "#900000"};
-		},
-		pointToLayer: function(feature, latlng) {
-			return new L.CircleMarker(latlng, {radius: 8, fillOpactiy: 0.8});
-		},
-		onEachFeature: function(feature, layer) {
-			layer.bindPopup(feature.properties.LSN)
-		}
-	}).addTo(map);
-//	var searchControl = new L.Control.Search({layer: addresses, propertyName: 'LSN', circleLocation:true});
-//	map.addControl( searchControl ); 
-	
 	//CSV Features
 	var markersLayer = new L.LayerGroup();	//layer contain searched elements
 	map.addLayer(markersLayer);
-	var planes = omnivore.csv('test.csv').addTo(map);
-	//var searchControlcsv = new L.Control.Search({layer: planes, initial: false});
- //     	map.addControl(searchControlcsv);
+	var muraldata = omnivore.csv('test.csv').addTo(map);
+
 </script>
 </body>
 </html>
