@@ -56,7 +56,7 @@
 	var muraldata = omnivore.csv ('test.csv', null, muralLayer).addTo(map);
 	muraldata.on('ready', function() {
 		map.fitBounds(muralLayer.getBounds());
-		console.log(muralLayer)
+		console.log('mural data ready')
 	});
 </script>
 </body>
