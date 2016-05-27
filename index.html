@@ -87,7 +87,7 @@
 		muralLayer.eachLayer(function (layer) {
 			$("#thumbs").mThumbnailScroller({axis:"x"/*change to "y" for vertical scroller*/});
       			var url = layer.feature.properties.Image;
-		  	$("#mTS_1_container").append('<li class="mTSThumbContainer"><a href="' + url + '"><img src="' + url + '" /></a></li>');
+		  	$("#mTS_1_container").append('<li class="mTSThumbContainer"><a href="' + url + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
 		});
 	});
 	
