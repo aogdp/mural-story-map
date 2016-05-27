@@ -116,7 +116,8 @@
 	      			var id = layer.id;
 		  		$("#mTS_1_container").append('<li id="' + id + '" class="mTSThumbContainer"><a href="' + '#' + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
 		  		$("a").click(function() {
-						alert('click')
+		  			var clickID = $(this)[0].id;
+					alert(clickID)
 					}
 				);
     			}
