@@ -115,6 +115,10 @@
 				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
 	      			var id = layer.id;
 		  		$("#mTS_1_container").append('<li id="' + id + '" class="mTSThumbContainer"><a href="' + '#' + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
+		  		$("a").click(function() {
+						alert('click')
+					}
+				);
     			}
 		}
 	});
@@ -125,12 +129,6 @@
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
 	});
-	$("a").click(function() {
-		
-		alert('click')
-		}
-	);
-	
 </script>
 </body>
 </html>
