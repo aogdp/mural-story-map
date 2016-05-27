@@ -129,10 +129,10 @@
 	muraldata.on('ready', function() {
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
-		muralLayer.eachLayer(function (layer) {
+		muralLayer.eachLayer(function (feature, layer) {
 			console.log(layer);
 			var id = layer.feature.id;
-			var id2 = layer[leaflet_id];
+			var id2 = layer._leaflet_id;
 			console.log(id2);
 			$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
       			var url = layer.feature.properties.Image;
