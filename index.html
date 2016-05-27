@@ -118,6 +118,10 @@
 		  			var clickID = this.id;
 		  			console.log(clickID);
 					}
+					muralLayer.eachLayer(function(feature) {
+						if (feature.properties.ID ===clickID) {
+						feature.openPopup();
+					});
 				);
     			}
 		}
