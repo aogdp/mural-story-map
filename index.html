@@ -130,9 +130,11 @@
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
 		muralLayer.eachLayer(function (layer) {
+			console.log(muralLayer);
 			$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
       			var url = layer.feature.properties.Image;
-		  	$("#mTS_1_container").append('<li class="mTSThumbContainer"><a href="' + url + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
+      			var id = feature.properties.id;
+		  	$("#mTS_1_container").append('<li id="' + id + '" class="mTSThumbContainer"><a href="' + url + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
 		});
 	});
 	
