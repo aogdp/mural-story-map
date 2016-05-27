@@ -52,18 +52,7 @@
 	display: inline-block;
 	border: 7px solid rgba(255,255,255,.1);
 }
-.content.light, .content.light .mTSButton{ background-color: #c2beb2; }
-.content.light li a{ border: 7px solid rgba(255,255,255,.4); }
-#content-1, #content-2{
-	width: auto;
-	height: 600px;
-}
-#content-1 ul li:first-child{ margin-top: 20px; }
-#content-1 ul li:last-child{ margin-bottom: 20px; }
-#content-2{ padding: 55px 10px; }
-#content-3 .mTSButton{ background-color: #333; }
-#content-5{ background-color: #444; }
-#content-6{ background-color: transparent; }
+.mTSButton{ background-color: #c2beb2; }
 #content-6 .mTSButton{
 	background-color: rgba(0,0,0,.7);
 	-moz-border-radius: 48px; -webkit-border-radius: 48px; border-radius: 48px;
@@ -136,6 +125,10 @@
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
 	});
+	$("li a").click(function({
+		alert('click')
+		})
+	);
 	
 </script>
 </body>
