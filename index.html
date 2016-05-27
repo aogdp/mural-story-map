@@ -87,7 +87,7 @@
 		console.log('mural data ready');
 		muralLayer.eachLayer(function (layer) {
       		var url = layer.feature.properties.Image;
-		  $("thumbsList").append('<li><a href="' + url + '"><img src="' + url + '" /></a></li>')
+		  $("#thumbsList").append('<li><a href="' + url + '"><img src="' + url + '" /></a></li>')
 		})
 	});
 	
