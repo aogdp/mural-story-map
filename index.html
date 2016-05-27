@@ -130,7 +130,7 @@
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
 		muralLayer.eachLayer(function (layer) {
-			var id = layer.id;
+			var id = layer.feature.id;
 			console.log(id);
 			$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
       			var url = layer.feature.properties.Image;
