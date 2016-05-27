@@ -116,9 +116,10 @@
 				layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {minWidth: 310,});
 				console.log(layer);
 				var id = feature.properties.ID;
+				var title = feature.properties.title;
 				console.log(id);
 				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
-		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" href="' + '#' + '"><img src="' + url + '" height=166px class="mTSThumb" /></a></li>');
+		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
 		  		$("a").click(function() {
 			  			var clickID = this.id;
 			  			console.log(clickID);
