@@ -121,7 +121,8 @@
 				var url = feature.properties.Image;
 				layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {minWidth: 310,});
 				console.log(layer);
-				var id = feature.properties.id;
+				var id = feature.properties.ID;
+				console.log(id);
 				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
 	      			var id = layer.id;
 		  		$("#mTS_1_container").append('<li id="' + id + '" class="mTSThumbContainer"><a href="' + url + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
