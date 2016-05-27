@@ -42,7 +42,7 @@
 <body>
 <div id="map"></div>
 <div id="thumbs">
-  <ul id="thumbsList" class="mThumbnailScroller" data-mts-axis="x">
+  <ul id="thumbsList">
     <li><a href="image-1-link"></a></li>
     <li><a href="image-2-link"></a></li>
     <li><a href="image-3-link"></a></li>
@@ -85,9 +85,10 @@
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
 		muralLayer.eachLayer(function (layer) {
-      		var url = layer.feature.properties.Image;
-		  $("#thumbsList").append('<li><a href="' + url + '"><img src="' + url + '" /></a></li>')
-		})
+			$("#thumbs").mThumbnailScroller({axis:"x"/*change to "y" for vertical scroller*/});
+      			var url = layer.feature.properties.Image;
+		  	$("#thumbsList").append('<li><a href="' + url + '"><img src="' + url + '" /></a></li>');
+		});
 	});
 	
 </script>
