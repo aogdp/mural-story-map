@@ -120,6 +120,13 @@
 			if (feature.properties && feature.properties.Title && feature.properties.Location) {
 				var url = feature.properties.Image;
 				layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {minWidth: 310,});
+				console.log(layer);
+				var id = layer.feature.id;
+				var id2 = layer._leaflet_id;
+				console.log(id2);
+				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
+	      			var id = layer.id;
+		  		$("#mTS_1_container").append('<li id="' + id + '" class="mTSThumbContainer"><a href="' + url + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
     			}
 		}
 	});
@@ -129,16 +136,6 @@
 	muraldata.on('ready', function() {
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
-		muralLayer.eachLayer(function (feature, layer) {
-			console.log(layer);
-			var id = layer.feature.id;
-			var id2 = layer._leaflet_id;
-			console.log(id2);
-			$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
-      			var url = layer.feature.properties.Image;
-      			var id = layer.id;
-		  	$("#mTS_1_container").append('<li id="' + id + '" class="mTSThumbContainer"><a href="' + url + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
-		});
 	});
 	
 </script>
