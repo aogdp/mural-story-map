@@ -131,7 +131,8 @@
 		console.log('mural data ready');
 		muralLayer.eachLayer(function (layer) {
 			var id = layer.feature.id;
-			console.log(id);
+			var id2 = layer._leaflet_id;
+			console.log(id + id2);
 			$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
       			var url = layer.feature.properties.Image;
       			var id = layer.id;
