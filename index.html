@@ -113,7 +113,7 @@
 				var id = feature.properties.ID;
 				console.log(id);
 				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
-		  		$("#mTS_1_container").append('<li id="' + id + '" class="mTSThumbContainer"><a href="' + '#' + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
+		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + ' href="' + '#' + '"><img src="' + url + '" class="mTSThumb" /></a></li>');
 		  		$("a").click(function() {
 		  			var clickID = this.id;
 		  			console.log(clickID);
