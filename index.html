@@ -113,7 +113,7 @@
 		onEachFeature: function (feature, layer) {
 			if (feature.properties && feature.properties.Title && feature.properties.Location) {
 				var url = feature.properties.Image;
-				layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {minWidth: 310,});
+				layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {minWidth: 310, maxHeight: 350 });
 				console.log(layer);
 				var id = feature.properties.ID;
 				var title = feature.properties.Title;
