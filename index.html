@@ -91,7 +91,7 @@
 </div>
 
 <script>
-	var map = new L.Map('map', {zoom: 18, center: new L.latLng([39.668858, -82.8037639]) });
+	var map = new L.Map('map', {zoom: 10, center: new L.latLng([39.668858, -82.8037639]) });
 	
 	var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
 		maxZoom: 19,
@@ -126,7 +126,7 @@
 						muralLayer.eachLayer(function(layer) {
 							if (layer.feature.properties.ID === clickID) {
 							layer.openPopup();
-							map.setView(layer.getLatLng(), 16)
+							map.setView(layer.getLatLng(), 10)
 							}
 						});
 					}
