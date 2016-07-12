@@ -104,9 +104,11 @@
       margin: 0;
       height: 200px;
     }
+
     .leaflet-popup-content {
-      height: auto !important;
+      height: auto!important;
     }
+
     .leaflet-popup-scrolled {
       border: none;
     }
@@ -119,9 +121,6 @@
   <div id="map"></div>
   <div id="content-6" class="content">
     <ul id="thumbsList">
-      <!--li class="mTSThumbContainer">
-        <a id="01" class="mural-img" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a>
-      </li-->
     </ul>
   </div>
 
@@ -166,7 +165,7 @@
         }
       }
     });
-    var muralCluster = new L.markerClusterGroup(null, {
+    var muralCluster = new L.markerClusterGroup({
       disableClusteringAtZoom: 14,
     }).addTo(map);
 
@@ -181,16 +180,26 @@
       console.log(muralLayer);
       //assign a click event to the mural images
       $(".mural-img").click(function() {
-		  	var clickID = "";
-		  	clickID =  $(this).prop('id');
-		  	console.log(clickID);
-			  muralLayer.eachLayer(function(layer) {
-	  		if (layer.feature.properties.ID === clickID) {
-	  			layer.openPopup();
-	  			map.flyTo(layer.getLatLng(), 15);
-			  }
-			});
-		});
+        map.closePopup();
+        var clickID = "";
+        clickID = $(this).prop('id');
+        console.log(clickID);
+        muralLayer.eachLayer(function(layer) {
+          if (layer.feature.properties.ID === clickID) {
+            map.flyTo(layer.getLatLng(), 15);
+            var click = 1;
+            map.on('moveend', function() {
+              if (click === 1) {
+                layer.openPopup();
+              }
+            });
+            layer.on('popupopen', function() {
+              click = 2
+            });
+          }
+        });
+        click = 2;
+      });
     });
   </script>
 </body>
