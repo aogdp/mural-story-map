@@ -126,7 +126,7 @@
 						muralLayer.eachLayer(function(layer) {
 							if (layer.feature.properties.ID === clickID) {
 							layer.openPopup();
-							var LatLng = layer.getlatlng();
+							var LatLng = layer.getLatLng();
 							console.log(LatLng);
 							map.setView(layer.getLatLng(), 16)
 							}
