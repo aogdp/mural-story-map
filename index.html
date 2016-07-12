@@ -119,20 +119,6 @@
 				console.log(id);
 				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
 		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
-		  		$(".mTSThumbContainer").click(function() {
-			  			var clickID = "";
-			  			clickID =  $(this).prop('id');
-			  			console.log(clickID);
-						/*muralLayer.eachLayer(function(layer) {
-							if (layer.feature.properties.ID === clickID) {
-							layer.openPopup();
-							var latlng = layer.getLatLng();
-							console.log(latlng.lat + "," + latlng.lng);
-							map.setView([latlng.lat, latlng.lng], 16);
-							}
-						});*/
-					}
-				);
     			}
 		}
 	});
@@ -144,6 +130,20 @@
 		console.log('mural data ready');
 		console.log(muralLayer);
 	});
+  	$("a").click(function() {
+  		var clickID = "";
+  		clickID =  $(this).prop('id');
+  		console.log(clickID);
+		/*muralLayer.eachLayer(function(layer) {
+			if (layer.feature.properties.ID === clickID) {
+			layer.openPopup();
+			var latlng = layer.getLatLng();
+			console.log(latlng.lat + "," + latlng.lng);
+			map.setView([latlng.lat, latlng.lng], 16);
+			}
+		});*/
+		}
+	);
 </script>
 </body>
 </html>
