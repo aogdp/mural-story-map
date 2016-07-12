@@ -13,9 +13,12 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
-  <!--leaflet-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+  <!--leaflet 1.0 RC-1 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet.js"></script>
+  <!--Leaflet 0.7.7 stable-->
+  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script-->
 
   <!-- Leaflet Omnivore Plugin GeoJson KML Etc -->
   <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
@@ -105,24 +108,16 @@
   <div id="map"></div>
   <div id="content-6" class="content">
     <ul id="thumbsList">
-      <li class="mTSThumbContainer">
+      <!--li class="mTSThumbContainer">
         <a id="01" class="mural-img" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a>
-      </li>
-      <!--li class="mTSThumbContainer"><a id="02" href="#"><img src="http://www.ohiorivertourism.org/murals1.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="03" href="#"><img src="http://www.ohiorivertourism.org/murals2.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="04" href="#"><img src="http://www.visitsteubenville.com/wp-content/uploads/2015/04/River-Reflections.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="05" href="#"><img src="http://www.visitsteubenville.com/wp-content/uploads/2015/04/Copy-of-Old-Reliance-Fire-House.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="01" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="01" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="01" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="01" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li-->
+      </li-->
     </ul>
   </div>
 
   <script>
     var map = new L.Map('map', {
-      zoom: 10,
-      center: new L.latLng([39.668858, -82.8037639]),
+      zoom: 15,
+      center: [39.7, -82.8],
     });
 
     var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -163,7 +158,7 @@
     map.addLayer(muralLayer);
 
     //CSV LOAD- Features via omnivore and add them to the mural layer
-    var muraldata = omnivore.csv('test.csv', null, muralLayer).addTo(map);
+    var muraldata = omnivore.csv('https://aogdp.github.io/mural-story-map/test.csv', null, muralLayer).addTo(map);
 
     //Wait for the data to be loaded before doing a few other things.
     muraldata.on('ready', function() {
@@ -171,16 +166,14 @@
       console.log('mural data ready');
       console.log(muralLayer);
       //assign a click event to the mural images
-      $("a").click(function() {
+      $(".mural-img").click(function() {
 		  	var clickID = "";
 		  	clickID =  $(this).prop('id');
 		  	console.log(clickID);
 			  muralLayer.eachLayer(function(layer) {
 	  		if (layer.feature.properties.ID === clickID) {
 	  			layer.openPopup();
-	  			var latlng = layer.getLatLng();
-	  			console.log(latlng.lat + "," + latlng.lng);
-	  			map.setView([latlng.lat, latlng.lng], 16);
+	  			map.flyTo(layer.getLatLng(), 16);
 			  }
 			});
 		});
