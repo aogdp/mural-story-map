@@ -130,10 +130,10 @@
 		console.log('mural data ready');
 		console.log(muralLayer);
 	});
-  $(".mural-img").click(function() {
-  	var clickID = "";
-  	clickID =  $(this).prop('id');
-  	console.log(clickID);
+	$(".mural-img").click(function() {
+	  	var clickID = "";
+	  	clickID =  $(this).prop('id');
+	  	console.log(clickID);
 		muralLayer.eachLayer(function(layer) {
   		if (layer.feature.properties.ID === clickID) {
   			layer.openPopup();
@@ -141,8 +141,8 @@
   			console.log(latlng.lat + "," + latlng.lng);
   			map.setView([latlng.lat, latlng.lng], 16);
 		  }
-    });
 	});
+});
 </script>
 </body>
 </html>
