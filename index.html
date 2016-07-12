@@ -168,6 +168,8 @@
     });
     var muralCluster = new L.markerClusterGroup({
       disableClusteringAtZoom: 14,
+      zoomToBoundsOnClick: true,
+      spiderfyOnMaxZoom: false,
     }).addTo(map);
 
     //CSV LOAD- Features via omnivore and add them to the mural layer
@@ -175,8 +177,12 @@
 
     //Wait for the data to be loaded before doing a few other things.
     muraldata.on('ready', function() {
-      map.fitBounds(muralLayer.getBounds());
+      map.fitBounds(muralLayer.getBounds(), {maxZoom: 8});
       muralCluster.addLayer(muralLayer);
+      muralCluster.on('clusterclick', function(e) {
+        console.log(e);
+        map.flyTo(e.layer.getLatLng(), 15, {duration: 2})
+      });
       console.log('mural data ready');
       console.log(muralLayer);
       //assign a click event to the mural images
