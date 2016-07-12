@@ -128,7 +128,7 @@
 							layer.openPopup();
 							var latlng = layer.getLatLng();
 							console.log(latlng.lat + "," + latlng.lng);
-							map.panTo(layer.getLatLng())
+							map.setView([latlng.lat,latlng.lng], 16);
 							}
 						});
 					}
