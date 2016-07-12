@@ -123,8 +123,8 @@
 		  		$("a").click(function() {
 			  			var clickID = this.id;
 			  			console.log(clickID);
-						muralLayer.eachLayer(function(layer) {
-							if (layer.feature.properties.ID === clickID) {
+						muralLayer.eachLayer(function(feature, layer) {
+							if (feature.properties.ID === clickID) {
 							layer.openPopup();
 							map.setView(layer.getLatLng(), 16)
 							}
