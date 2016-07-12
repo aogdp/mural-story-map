@@ -77,8 +77,8 @@
 <div id="map"></div>
 <div id="content-6" class="content">
   <ul id="thumbsList">
-    <!--li class="mTSThumbContainer"><a id="01" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
-    <li class="mTSThumbContainer"><a id="02" href="#"><img src="http://www.ohiorivertourism.org/murals1.jpg" height="166px" class="mTSThumb"></a></li>
+    <li class="mTSThumbContainer"><a id="01" class="mural-img" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
+    <!--li class="mTSThumbContainer"><a id="02" href="#"><img src="http://www.ohiorivertourism.org/murals1.jpg" height="166px" class="mTSThumb"></a></li>
     <li class="mTSThumbContainer"><a id="03" href="#"><img src="http://www.ohiorivertourism.org/murals2.jpg" height="166px" class="mTSThumb"></a></li>
     <li class="mTSThumbContainer"><a id="04" href="#"><img src="http://www.visitsteubenville.com/wp-content/uploads/2015/04/River-Reflections.jpg" height="166px" class="mTSThumb"></a></li>
     <li class="mTSThumbContainer"><a id="05" href="#"><img src="http://www.visitsteubenville.com/wp-content/uploads/2015/04/Copy-of-Old-Reliance-Fire-House.jpg" height="166px" class="mTSThumb"></a></li>
@@ -118,7 +118,7 @@
 				var title = feature.properties.Title;
 				console.log(id);
 				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
-		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
+		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
     			}
 		}
 	});
@@ -130,20 +130,19 @@
 		console.log('mural data ready');
 		console.log(muralLayer);
 	});
-  	$("a").click(function() {
+  	$(".mural-img").click(function() {
   		var clickID = "";
   		clickID =  $(this).prop('id');
   		console.log(clickID);
-		/*muralLayer.eachLayer(function(layer) {
+		muralLayer.eachLayer(function(layer) {
 			if (layer.feature.properties.ID === clickID) {
-			layer.openPopup();
-			var latlng = layer.getLatLng();
-			console.log(latlng.lat + "," + latlng.lng);
-			map.setView([latlng.lat, latlng.lng], 16);
+				layer.openPopup();
+				var latlng = layer.getLatLng();
+				console.log(latlng.lat + "," + latlng.lng);
+				map.setView([latlng.lat, latlng.lng], 16);
 			}
-		});*/
-		}
-	);
+		});
+	});
 </script>
 </body>
 </html>
