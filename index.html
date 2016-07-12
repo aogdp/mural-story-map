@@ -23,6 +23,11 @@
   <!-- Leaflet Omnivore Plugin GeoJson KML Etc -->
   <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 
+  <!--marker cluster for 1.0-->
+  <link href='https://www.ovrdc.org/apps/assets/cssjs/marker-cluster/MarkerCluster.css' rel='stylesheet' />
+  <link href='https://www.ovrdc.org/apps/assets/cssjs/marker-cluster/MarkerCluster.Default.css' rel='stylesheet' />
+  <script src='https://www.ovrdc.org/apps/assets/cssjs/marker-cluster/leaflet.markercluster.js'></script>
+
   <!--jquery scroller plugin-->
   <link href="thumbnail-scroller/jquery.mThumbnailScroller.min.css" rel="stylesheet" />
   <script src="thumbnail-scroller/scroller.min.js"></script>
@@ -99,6 +104,12 @@
       margin: 0;
       height: 200px;
     }
+    .leaflet-popup-content {
+      height: auto !important;
+    }
+    .leaflet-popup-scrolled {
+      border: none;
+    }
   </style>
 
 
@@ -140,9 +151,9 @@
       onEachFeature: function(feature, layer) {
         if (feature.properties && feature.properties.Title && feature.properties.Location) {
           var url = feature.properties.Image;
-          layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {
+          layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + feature.properties.Title + '</h4>' + feature.properties.Location + '<br />', {
             minWidth: 310,
-            maxHeight: 280
+            maxHeight: 280,
           });
           var id = feature.properties.ID;
           var title = feature.properties.Title;
@@ -155,7 +166,9 @@
         }
       }
     });
-    map.addLayer(muralLayer);
+    var muralCluster = new L.markerClusterGroup(null, {
+      disableClusteringAtZoom: 14,
+    }).addTo(map);
 
     //CSV LOAD- Features via omnivore and add them to the mural layer
     var muraldata = omnivore.csv('https://aogdp.github.io/mural-story-map/test.csv', null, muralLayer).addTo(map);
@@ -163,6 +176,7 @@
     //Wait for the data to be loaded before doing a few other things.
     muraldata.on('ready', function() {
       map.fitBounds(muralLayer.getBounds());
+      muralCluster.addLayer(muralLayer);
       console.log('mural data ready');
       console.log(muralLayer);
       //assign a click event to the mural images
@@ -173,7 +187,7 @@
 			  muralLayer.eachLayer(function(layer) {
 	  		if (layer.feature.properties.ID === clickID) {
 	  			layer.openPopup();
-	  			map.flyTo(layer.getLatLng(), 16);
+	  			map.flyTo(layer.getLatLng(), 15);
 			  }
 			});
 		});
