@@ -119,7 +119,7 @@
 				console.log(id);
 				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
 		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
-		  		$("feature.properties.ID").click(function() {
+		  		$('"#' + feature.properties.ID + '"').click(function() {
 		  			console.log(click)
 		  		});
     			}
