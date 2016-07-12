@@ -1,84 +1,114 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>AOGDP Mural Story Map</title>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>AOGDP Mural Story Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
-<!--Font Awesome CDN and Bootstrap CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <!--Font Awesome CDN and Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
- <!--leaflet-->
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+  <!--leaflet-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
 
-<!-- Leaflet Omnivore Plugin GeoJson KML Etc -->
-<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+  <!-- Leaflet Omnivore Plugin GeoJson KML Etc -->
+  <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 
-<!--jquery scroller plugin-->
-<link href="thumbnail-scroller/jquery.mThumbnailScroller.min.css" rel="stylesheet" />
-<script src="thumbnail-scroller/scroller.min.js"></script>
+  <!--jquery scroller plugin-->
+  <link href="thumbnail-scroller/jquery.mThumbnailScroller.min.css" rel="stylesheet" />
+  <script src="thumbnail-scroller/scroller.min.js"></script>
 
-<style>
-#map { position:absolute; top:0; bottom:200px; width:100%; }
-.leaflet-popup-content img {
-  max-width:100%;
-  }
-#thumbs{
-  overflow: auto;
-  width: 800px;
-  height: auto;
-  z-index: 700;
-}
-.content{
-	overflow: auto;
-	position: relative;
-	padding: 10px;
-	background-color: #333;
-	margin: 20px;
-	width: 50%;
-	height: auto;
-	float: left;
-}
-.content li{
-	margin: 4px;
-	overflow: hidden;
-}
-.content li a{
-	display: inline-block;
-	border: 7px solid rgba(255,255,255,.1);
-}
-.mTSButton{ background-color: #c2beb2; }
-#content-6 .mTSButton{
-	background-color: rgba(0,0,0,.7);
-	-moz-border-radius: 48px; -webkit-border-radius: 48px; border-radius: 48px;
-}
-#content-6 .mTSButtonLeft{ left: 5px;width: 48px;height: 48px;  }
-#content-6 .mTSButtonRight{ right: 5px;width: 48px;height: 48px; }
-#content-6 {
-	/*background-color: black;*/
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	margin: 0;
-	height: 200px;
-}
-</style>
+  <style>
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 200px;
+      width: 100%;
+    }
+
+    .leaflet-popup-content img {
+      max-width: 100%;
+    }
+
+    #thumbs {
+      overflow: auto;
+      width: 800px;
+      height: auto;
+      z-index: 700;
+    }
+
+    .content {
+      overflow: auto;
+      position: relative;
+      padding: 10px;
+      background-color: #333;
+      margin: 20px;
+      width: 50%;
+      height: auto;
+      float: left;
+    }
+
+    .content li {
+      margin: 4px;
+      overflow: hidden;
+    }
+
+    .content li a {
+      display: inline-block;
+      border: 7px solid rgba(255, 255, 255, .1);
+    }
+
+    .mTSButton {
+      background-color: #c2beb2;
+    }
+
+    #content-6 .mTSButton {
+      background-color: rgba(0, 0, 0, .7);
+      -moz-border-radius: 48px;
+      -webkit-border-radius: 48px;
+      border-radius: 48px;
+    }
+
+    #content-6 .mTSButtonLeft {
+      left: 5px;
+      width: 48px;
+      height: 48px;
+    }
+
+    #content-6 .mTSButtonRight {
+      right: 5px;
+      width: 48px;
+      height: 48px;
+    }
+
+    #content-6 {
+      /*background-color: black;*/
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      height: 200px;
+    }
+  </style>
 
 
 </head>
 
 <body>
-<div id="map"></div>
-<div id="content-6" class="content">
-  <ul id="thumbsList">
-    <li class="mTSThumbContainer"><a id="01" class="mural-img" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
-    <!--li class="mTSThumbContainer"><a id="02" href="#"><img src="http://www.ohiorivertourism.org/murals1.jpg" height="166px" class="mTSThumb"></a></li>
+  <div id="map"></div>
+  <div id="content-6" class="content">
+    <ul id="thumbsList">
+      <li class="mTSThumbContainer">
+        <a id="01" class="mural-img" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a>
+      </li>
+      <!--li class="mTSThumbContainer"><a id="02" href="#"><img src="http://www.ohiorivertourism.org/murals1.jpg" height="166px" class="mTSThumb"></a></li>
     <li class="mTSThumbContainer"><a id="03" href="#"><img src="http://www.ohiorivertourism.org/murals2.jpg" height="166px" class="mTSThumb"></a></li>
     <li class="mTSThumbContainer"><a id="04" href="#"><img src="http://www.visitsteubenville.com/wp-content/uploads/2015/04/River-Reflections.jpg" height="166px" class="mTSThumb"></a></li>
     <li class="mTSThumbContainer"><a id="05" href="#"><img src="http://www.visitsteubenville.com/wp-content/uploads/2015/04/Copy-of-Old-Reliance-Fire-House.jpg" height="166px" class="mTSThumb"></a></li>
@@ -87,60 +117,66 @@
     <li class="mTSThumbContainer"><a id="01" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
     <li class="mTSThumbContainer"><a id="01" href="#"><img src="http://www.sciotohistorical.org/files/fullsize/f87801014cb97379d27edb4a8bddd5c2.jpg" height="166px" class="mTSThumb"></a></li>
     <!-- and so on... -->
-  </ul>
-</div>
+    </ul>
+  </div>
 
-<script>
-	var map = new L.Map('map', {zoom: 10, center: new L.latLng([39.668858, -82.8037639]) });
-	
-	var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-		maxZoom: 19,
-		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
-	}).addTo(map);
+  <script>
+    var map = new L.Map('map', {
+      zoom: 10,
+      center: new L.latLng([39.668858, -82.8037639])
+    });
 
-	//GeoJson layer to hold the csv data
-	var muralLayer = new L.geoJson(null, {
-		pointToLayer: function (feature, latlng) {
-				return L.circleMarker(latlng, {
-					radius: 8,
-					fillColor: "#ff7800",
-					color: "#000",
-					weight: 1,
-					opacity: 1,
-					fillOpacity: 0.8
-				});
-		},
-		onEachFeature: function (feature, layer) {
-			if (feature.properties && feature.properties.Title && feature.properties.Location) {
-				var url = feature.properties.Image;
-				layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {minWidth: 310, maxHeight: 280 });
-				var id = feature.properties.ID;
-				var title = feature.properties.Title;
-				console.log(id);
-				$("#content-6").mThumbnailScroller({type:"click-25",/*change to "y" for vertical scroller*/});
-		  		$("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
-		  		$('"#' + feature.properties.ID + '"').click(function() {
-		  			console.log(click)
-		  		});
-    			}
-		}
-	});
-	map.addLayer(muralLayer);
-	
-	//CSV LOAD- Features via omnivore and add them to the mural layer
-	var muraldata = omnivore.csv ('test.csv', null, muralLayer).addTo(map);
-	
-	//Wait for the data to be loaded before doing a few other things.
-	muraldata.on('ready', function() {
-		map.fitBounds(muralLayer.getBounds());
-		console.log('mural data ready');
-		console.log(muralLayer);
-			//assign a click event to the mural images 
-		$(".mural-img").click(function() {
+    var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+    }).addTo(map);
+
+    //GeoJson layer to hold the csv data
+    var muralLayer = new L.geoJson(null, {
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 8,
+          fillColor: "#ff7800",
+          color: "#000",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        });
+      },
+      onEachFeature: function(feature, layer) {
+        if (feature.properties && feature.properties.Title && feature.properties.Location) {
+          var url = feature.properties.Image;
+          layer.bindPopup('<img src="' + url + '" style="width:300px;"><br/>' + feature.properties.Title + ' ' + feature.properties.Location, {
+            minWidth: 310,
+            maxHeight: 280
+          });
+          var id = feature.properties.ID;
+          var title = feature.properties.Title;
+          console.log(id);
+          $("#content-6").mThumbnailScroller({
+            type: "click-25",
+            /*change to "y" for vertical scroller*/
+          });
+          $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
+        }
+      }
+    });
+    map.addLayer(muralLayer);
+
+    //CSV LOAD- Features via omnivore and add them to the mural layer
+    var muraldata = omnivore.csv('test.csv', null, muralLayer).addTo(map);
+
+    //Wait for the data to be loaded before doing a few other things.
+    muraldata.on('ready', function() {
+      map.fitBounds(muralLayer.getBounds());
+      console.log('mural data ready');
+      console.log(muralLayer);
+      //assign a click event to the mural images
+      $("a").click(function() {
 		  	var clickID = "";
 		  	clickID =  $(this).prop('id');
 		  	console.log(clickID);
-			muralLayer.eachLayer(function(layer) {
+			  muralLayer.eachLayer(function(layer) {
 	  		if (layer.feature.properties.ID === clickID) {
 	  			layer.openPopup();
 	  			var latlng = layer.getLatLng();
@@ -149,7 +185,8 @@
 			  }
 			});
 		});
-	});
-</script>
+    });
+  </script>
 </body>
+
 </html>
