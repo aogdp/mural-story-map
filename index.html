@@ -132,20 +132,19 @@
 		map.fitBounds(muralLayer.getBounds());
 		console.log('mural data ready');
 		console.log(muralLayer);
-	});
-	
-	//assign a click event to the mural images 
-	$(".mural-img").click(function() {
-	  	var clickID = "";
-	  	clickID =  $(this).prop('id');
-	  	console.log(clickID);
-		muralLayer.eachLayer(function(layer) {
-  		if (layer.feature.properties.ID === clickID) {
-  			layer.openPopup();
-  			var latlng = layer.getLatLng();
-  			console.log(latlng.lat + "," + latlng.lng);
-  			map.setView([latlng.lat, latlng.lng], 16);
-		  }
+			//assign a click event to the mural images 
+		$(".mural-img").click(function() {
+		  	var clickID = "";
+		  	clickID =  $(this).prop('id');
+		  	console.log(clickID);
+			muralLayer.eachLayer(function(layer) {
+	  		if (layer.feature.properties.ID === clickID) {
+	  			layer.openPopup();
+	  			var latlng = layer.getLatLng();
+	  			console.log(latlng.lat + "," + latlng.lng);
+	  			map.setView([latlng.lat, latlng.lng], 16);
+			  }
+			});
 		});
 	});
 </script>
