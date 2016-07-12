@@ -126,8 +126,8 @@
 						muralLayer.eachLayer(function(layer) {
 							if (layer.feature.properties.ID === clickID) {
 							layer.openPopup();
-							var LatLng = layer.getLatLng();
-							console.log(LatLng);
+							var latlng = layer.getLatLng();
+							console.log(latlng.lat + "," + latlng.lng);
 							map.panTo(layer.getLatLng())
 							}
 						});
