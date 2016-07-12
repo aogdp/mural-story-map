@@ -131,17 +131,17 @@
 		console.log(muralLayer);
 	});
   $(".mural-img").click(function() {
-  		var clickID = "";
-  		clickID =  $(this).prop('id');
-  		console.log(clickID);
+  	var clickID = "";
+  	clickID =  $(this).prop('id');
+  	console.log(clickID);
 		muralLayer.eachLayer(function(layer) {
-			if (layer.feature.properties.ID === clickID) {
-				layer.openPopup();
-				var latlng = layer.getLatLng();
-				console.log(latlng.lat + "," + latlng.lng);
-				map.setView([latlng.lat, latlng.lng], 16);
-			}
-		});
+  		if (layer.feature.properties.ID === clickID) {
+  			layer.openPopup();
+  			var latlng = layer.getLatLng();
+  			console.log(latlng.lat + "," + latlng.lng);
+  			map.setView([latlng.lat, latlng.lng], 16);
+		  }
+    });
 	});
 </script>
 </body>
