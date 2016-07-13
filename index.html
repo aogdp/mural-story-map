@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<!--test-->
 
 <head>
   <title>AOGDP Mural Story Map</title>
@@ -23,6 +22,7 @@
 
   <!-- Leaflet Omnivore Plugin GeoJson KML Etc -->
   <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.0.0/leaflet.ajax.min.js"></script>
 
   <!--marker cluster for 1.0-->
   <link href='https://www.ovrdc.org/apps/assets/cssjs/marker-cluster/MarkerCluster.css' rel='stylesheet' />
@@ -137,12 +137,35 @@
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
     }).addTo(map);
 
+    //Define style & Load Appalachian Counties outline
+    var appalachia = L.geoJson(null, {
+        style: {
+          color: '#f00',
+          weight: 3,
+          opacity: 1,
+          fillOpacity: 0.08,
+          interactive: false,
+          dashArray: "5, 8",
+    		}
+    }).addTo(map);
+
+    var appalachiaData = omnivore.geojson("Ohio_Appalachian_Region.geojson",null, appalachia);
+
+    //Load with AJAX Plugin
+    /*var appalachiaData2 = new L.geoJSON.ajax("Ohio_Appalachian_Region.geojson", {
+      style: {
+        color: "purple",
+      }
+    })
+    .addTo(map);
+    */
+
     //GeoJson layer to hold the csv data
     var muralLayer = new L.geoJson(null, {
       pointToLayer: function(feature, latlng) {
         return L.circleMarker(latlng, {
           radius: 8,
-          fillColor: "#ff7800",
+          fillColor: "#75EDFE",
           color: "#000",
           weight: 1,
           opacity: 1,
@@ -152,7 +175,10 @@
       onEachFeature: function(feature, layer) {
         if (feature.properties && feature.properties.Title && feature.properties.Location) {
           var url = feature.properties.Image;
-          layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + feature.properties.Title + '</h4>' + feature.properties.Location + '<br />', {
+          var layerx = layer.getLatLng().lat;
+          var layery = layer.getLatLng().lng;
+          layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + feature.properties.Title + '</h4>' + feature.properties.Location + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + layerx + ',' + layery + '" target="_blank">Directions</a></span></a></li>',
+           {
             minWidth: 310,
             maxHeight: 280,
           });
@@ -163,7 +189,7 @@
             type: "click-25",
             /*change to "y" for vertical scroller*/
           });
-          $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" /></a></li>');
+          $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + title + '" height=166px class="mTSThumb" />');
         }
       }
     });
