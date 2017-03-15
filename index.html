@@ -192,16 +192,16 @@
       },
       onEachFeature: function(feature, layer) {
         if (feature.properties && feature.properties.Title && feature.properties.Location) {
-          var url = feature.properties.Image;
-          var layerx = layer.getLatLng().lat;
-          var layery = layer.getLatLng().lng;
-          layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + feature.properties.Title + '</h4>' + feature.properties.Location + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + layerx + ',' + layery + '" target="_blank">Directions</a></span></a></li>',
+          var url = feature.properties.Link;
+          var layerx = layer.getLatLng().Latitude;
+          var layery = layer.getLatLng().Longitude;
+          layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + feature.properties.Name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + layerx + ',' + layery + '" target="_blank">Directions</a></span></a></li>',
            {
             minWidth: 310,
             maxHeight: 280,
           });
           var id = feature.properties.ID;
-          var title = feature.properties.Title;
+          var title = feature.properties.Name;
           console.log(id);
           $("#content-6").mThumbnailScroller({
             type: "click-25",
@@ -218,7 +218,7 @@
     }).addTo(map);
 
     //CSV LOAD- Features via omnivore and add them to the mural layer
-    var muraldata = omnivore.csv('https://aogdp.github.io/mural-story-map/test.csv', null, muralLayer).addTo(map);
+    var muraldata = omnivore.csv('https://aogdp.github.io/mural-story-map/murals.csv', null, muralLayer).addTo(map);
 
     //Wait for the data to be loaded before doing a few other things.
     muraldata.on('ready', function() {
