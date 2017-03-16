@@ -234,10 +234,10 @@
       $(".mural-img").click(function() {
         map.closePopup();
         var clickID = "";
-        clickID = $(this).prop('id');
+        clickID = $(this).prop('Name');
         console.log(clickID);
         muralLayer.eachLayer(function(layer) {
-          if (layer.feature.properties.ID === clickID) {
+          if (layer.feature.properties.Name === clickID) {
             map.flyTo(layer.getLatLng(), 15);
             var click = 1;
             map.on('moveend', function() {
