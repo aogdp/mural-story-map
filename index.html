@@ -16,9 +16,6 @@
   <!--leaflet 1.0 RC-1 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet.css" />
   <script src="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet.js"></script>
-  <!--Leaflet 0.7.7 stable-->
-  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script-->
 
   <!-- Leaflet Omnivore Plugin GeoJson KML Etc -->
   <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
@@ -33,6 +30,7 @@
   <link href="thumbnail-scroller/jquery.mThumbnailScroller.min.css" rel="stylesheet" />
   <script src="thumbnail-scroller/scroller.min.js"></script>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
 
   <style>
@@ -116,12 +114,22 @@
     .leaflet-popup-scrolled {
       border: none;
     }
+    #loader {
+      position: absolute;
+      top: 40%;
+      left: 48%;
+      margin: 0 auto;
+      z-index: 9999;
+      width: 100px;
+      background: white;
+    }
   </style>
 
 
 </head>
 
 <body>
+  <!--div id="loader"><img src="images/loader.gif" /></div-->
   <div id="map"></div>
   <div id="content-6" class="content">
     <ul id="thumbsList">
@@ -232,6 +240,9 @@
 
     //Wait for the data to be loaded before doing a few other things.
     muraldata.on('ready', function() {
+      setTimeout(function() {
+        $("#loader").fadeOut();
+      },2000);
       console.log(muraldata);
       map.fitBounds(muralLayer.getBounds(), {maxZoom: 8});
       muralCluster.addLayer(muralLayer);
