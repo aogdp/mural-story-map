@@ -198,7 +198,7 @@
           console.log('getting info');
           var file = feature.properties.filename;
           var filelink = file.replace(/\s/g,'_');
-          var url = "/images/compressed/" + filelink;
+          var url = "images/compressed/" + filelink;
           //console.log(url);
           var layerx = layer.getLatLng().Latitude;
           var layery = layer.getLatLng().Longitude;
@@ -228,7 +228,7 @@
     }).addTo(map);
 
     //CSV LOAD- Features via omnivore and add them to the mural layer
-    var muraldata = omnivore.csv('/murals.csv', null, muralLayer);
+    var muraldata = omnivore.csv('murals.csv', null, muralLayer);
 
     //Wait for the data to be loaded before doing a few other things.
     muraldata.on('ready', function() {
