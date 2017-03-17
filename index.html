@@ -32,7 +32,7 @@
   <!--jquery scroller plugin-->
   <link href="thumbnail-scroller/jquery.mThumbnailScroller.min.css" rel="stylesheet" />
   <script src="thumbnail-scroller/scroller.min.js"></script>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
 
   <style>
@@ -148,13 +148,13 @@
       maxZoom: 22,
       maxNativeZoom: 18,
     }).addTo(map);
-    
+
     var esrigray = L.tileLayer('//server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
       maxNativeZoom: 16,
       maxZoom: 19,
     });
-    
+
     //Define style & Load Appalachian Counties outline
     var appalachia = L.geoJson(null, {
         style: {
@@ -177,7 +177,7 @@
     })
     .addTo(map);
     */
-
+    var x = 0;
     //GeoJson layer to hold the csv data
     var muralLayer = new L.geoJson(null, {
       pointToLayer: function(feature, latlng) {
@@ -191,23 +191,33 @@
         });
       },
       onEachFeature: function(feature, layer) {
-        if (feature.properties && feature.properties.Title && feature.properties.Location) {
-          var url = feature.properties.Link;
+        //feature.properties && feature.properties.Title && feature.properties.Location
+        if (feature.properties.filename) {
+          feature.properties.id = x;
+          x = x+1;
+          console.log('getting info');
+          var file = feature.properties.filename;
+          var filelink = file.replace(/\s/g,'_');
+          var url = "/images/compressed/" + filelink;
+          //console.log(url);
           var layerx = layer.getLatLng().Latitude;
           var layery = layer.getLatLng().Longitude;
-          layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + feature.properties.Name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + layerx + ',' + layery + '" target="_blank">Directions</a></span></a></li>',
+          var name = feature.properties.Name;
+          var id = feature.properties.id;
+          console.log(id);
+          layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + layerx + ',' + layery + '" target="_blank">Directions</a></span></a></li>',
            {
             minWidth: 310,
             maxHeight: 280,
           });
-          var id = feature.properties.ID;
+          //var id = feature.properties.ID;
           var title = feature.properties.Name;
-          console.log(id);
+          //console.log(id);
           $("#content-6").mThumbnailScroller({
             type: "click-25",
             /*change to "y" for vertical scroller*/
           });
-          $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + Name + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + Name + '" height=166px class="mTSThumb" />');
+          $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + name + '" height=166px class="mTSThumb" />');
         }
       }
     });
@@ -218,10 +228,11 @@
     }).addTo(map);
 
     //CSV LOAD- Features via omnivore and add them to the mural layer
-    var muraldata = omnivore.csv('https://aogdp.github.io/mural-story-map/murals.csv', null, muralLayer).addTo(map);
+    var muraldata = omnivore.csv('/murals.csv', null, muralLayer);
 
     //Wait for the data to be loaded before doing a few other things.
     muraldata.on('ready', function() {
+      console.log(muraldata);
       map.fitBounds(muralLayer.getBounds(), {maxZoom: 8});
       muralCluster.addLayer(muralLayer);
       muralCluster.on('clusterclick', function(e) {
@@ -234,10 +245,10 @@
       $(".mural-img").click(function() {
         map.closePopup();
         var clickID = "";
-        clickID = $(this).prop('Name');
+        clickID = $(this).prop('id');
         console.log(clickID);
         muralLayer.eachLayer(function(layer) {
-          if (layer.feature.properties.Name === clickID) {
+          if ((layer.feature.properties.id) == clickID) {
             map.flyTo(layer.getLatLng(), 15);
             var click = 1;
             map.on('moveend', function() {
