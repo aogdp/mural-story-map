@@ -2,6 +2,7 @@ var map = new L.Map('map', {
   zoom: 15,
   fullscreenControl: true,
   center: [39.7, -82.8],
+  minZoom: 8
 });
 
 var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -60,21 +61,22 @@ var muralLayer = new L.geoJson(null, {
     });
   },
   onEachFeature: function(feature, layer) {
-    //feature.properties && feature.properties.Title && feature.properties.Location
+    /*feature.properties && feature.properties.Title && feature.properties.Location*/
     if (feature.properties.filename) {
       feature.properties.id = x;
       x = x+1;
-      console.log('getting info');
+/*      console.log('getting info');*/
       var image = feature.properties.filename;
       var imageUrl = encodeURI(image);
-      console.log(imageUrl);
+      /*console.log(imageUrl);*/
       var url = "images/compressed/" + imageUrl;
-      //console.log(url);
+      /*console.log(url);*/
+      var thumbUrl = "images/thumbnails/" + imageUrl;
       var layerx = layer.getLatLng().Latitude;
       var layery = layer.getLatLng().Longitude;
       var name = feature.properties.Name;
       var id = feature.properties.id;
-      console.log(id);
+      /*console.log(id);*/
       layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + layerx + ',' + layery + '" target="_blank">Directions</a></span></a></li>',
        {
         minWidth: 310,
@@ -85,40 +87,63 @@ var muralLayer = new L.geoJson(null, {
       //console.log(id);
       $("#content-6").mThumbnailScroller({
         type: "click-25",
+        callbacks:{
+            onScroll:function(){
+              console.log("scroll completed");
+            }
+        },
         /*change to "y" for vertical scroller*/
       });
-      $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + url + '" title="' + name + '" height=166px class="mTSThumb" />');
+      $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + thumbUrl + '" title="' + name + '" height=166px class="mTSThumb" />');
     }
   }
 });
 var muralCluster = new L.markerClusterGroup({
-  disableClusteringAtZoom: 14,
+  disableClusteringAtZoom: 13,
   zoomToBoundsOnClick: true,
   spiderfyOnMaxZoom: false,
+  maxClusterRadius: 60
 }).addTo(map);
 
-//CSV LOAD- Features via omnivore and add them to the mural layer
+/*CSV LOAD- Features via omnivore and add them to the mural layer*/
 var muraldata = omnivore.csv('murals.csv', null, muralLayer);
 
-//Wait for the data to be loaded before doing a few other things.
+/*scroll to image when mural point is clicked*/
+muralLayer.on('click', function(e) {
+  console.log(e);
+  $(".mural-img").removeClass('active');
+  var muralid = e.layer.feature.properties.id;
+  $("#content-6").mThumbnailScroller("scrollTo", "#" + muralid, {
+    easing: "easeInOutStrong",
+    speed: 1000,
+    callbacks: true
+  });
+  setTimeout(function() {
+    $("#" + muralid).addClass('active');
+  }, 100);
+});
+
+/*Wait for the data to be loaded before doing a few other things.*/
 muraldata.on('ready', function() {
   setTimeout(function() {
     $("#loader").fadeOut();
   },2000);
-  console.log(muraldata);
+  console.log('mural data ready');
+  /*console.log(muralLayer);
+  console.log(muraldata);*/
   map.fitBounds(muralLayer.getBounds(), {maxZoom: 8});
   muralCluster.addLayer(muralLayer);
   muralCluster.on('clusterclick', function(e) {
     console.log(e);
-    map.flyTo(e.layer.getLatLng(), 15, {duration: 2})
+    map.flyTo(e.layer.getLatLng(), 14, {duration: 2})
   });
-  console.log('mural data ready');
-  console.log(muralLayer);
-  //assign a click event to the mural images
+  /*assign a click event to the mural images*/
   $(".mural-img").click(function() {
+    $(".mural-img").removeClass('active');
     map.closePopup();
     var clickID = "";
     clickID = $(this).prop('id');
+
     console.log(clickID);
     muralLayer.eachLayer(function(layer) {
       if ((layer.feature.properties.id) == clickID) {
@@ -131,9 +156,18 @@ muraldata.on('ready', function() {
         });
         layer.on('popupopen', function() {
           click = 2
+          $("#" + clickID).addClass('active');
         });
       }
     });
     click = 2;
   });
+});
+
+/*clear active from all mural images on map click or popup close*/
+map.on('click', function() {
+  $('.mural-img').removeClass('active')
+});
+map.on('popupclose', function() {
+  $('.mural-img').removeClass('active')
 });
