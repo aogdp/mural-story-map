@@ -1,8 +1,9 @@
 var map = new L.Map('map', {
   zoom: 15,
   fullscreenControl: true,
-  center: [39.7, -82.8],
-  minZoom: 8
+  center: [38.2, -82.2],
+  minZoom: 7,
+  maxBounds: [[42.5935, -86.2097],[35.9869,-78.5303]]
 });
 
 var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -171,3 +172,9 @@ map.on('click', function() {
 map.on('popupclose', function() {
   $('.mural-img').removeClass('active')
 });
+
+
+/*Checks lat/long on map
+map.on('click',function(e){
+  alert("Lat:" + e.latlng.lat + "long:" + e.latlng.lng)
+});*/
