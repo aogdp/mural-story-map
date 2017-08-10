@@ -1,9 +1,9 @@
 var map = new L.Map('map', {
-  zoom: 14,
+  zoom: 8,
   fullscreenControl: true,
-  center: [39.2, -80.2],
+  center: [39.3, -82.3],
   minZoom: 7,
-  maxBounds: [[42.5935, -86.2097],[35.9869,-78.5303]],
+  maxBounds: [[45.84, -90.38],[35.02,-74.73]],
 });
 
 /* OSM B&W Basemap no longer used NK update 8-9-17
@@ -33,9 +33,11 @@ var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Wor
   maxZoom: 22
 });
 
-var labels = L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png', {
+var labels = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+  subdomains: 'abcd',
   maxNativeZoom: 18,
-  maxZoom: 24,
+  maxZoom: 22,
   opacity: 0.9,
 });
 
@@ -145,7 +147,7 @@ muraldata.on('ready', function() {
   console.log('mural data ready');
   /*console.log(muralLayer);
   console.log(muraldata);*/
-  map.fitBounds(muralLayer.getBounds(), {maxZoom: 8});
+  /*map.fitBounds(muralLayer.getBounds(), {maxZoom: 8});*/
   muralCluster.addLayer(muralLayer);
   muralCluster.on('clusterclick', function(e) {
     console.log(e);
@@ -201,7 +203,7 @@ map.on('zoom',function() {
   }
 });
 
-/*Checks lat/long on map
+/*Checks lat/long on map*/
 map.on('click',function(e){
   alert("Lat:" + e.latlng.lat + "long:" + e.latlng.lng)
-});*/
+});
