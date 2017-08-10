@@ -1,16 +1,17 @@
 var map = new L.Map('map', {
-  zoom: 15,
+  zoom: 14,
   fullscreenControl: true,
-  center: [38.2, -82.2],
+  center: [39.2, -80.2],
   minZoom: 7,
-  maxBounds: [[42.5935, -86.2097],[35.9869,-78.5303]]
+  maxBounds: [[42.5935, -86.2097],[35.9869,-78.5303]],
 });
 
+/* OSM B&W Basemap no longer used NK update 8-9-17
 var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
 });
-
+*/
 
 var cdblight = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
@@ -26,12 +27,24 @@ var esrigray = L.tileLayer('//server.arcgisonline.com/ArcGIS/rest/services/Canva
   maxZoom: 19,
 });
 
+var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Tiles &copy; Esri',
+  /*maxNativeZoom: 14,*/
+  maxZoom: 22
+});
+
+var labels = L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png', {
+  maxNativeZoom: 18,
+  maxZoom: 24,
+  opacity: 0.9,
+});
+
 //Define style & Load Appalachian Counties outline
 var appalachia = L.geoJson(null, {
     style: {
-      color: '#f00',
+      color: '#D2B48C',
       weight: 3,
-      opacity: 1,
+      opacity: 0.5,
       fillOpacity: 0.1,
       interactive: false,
       dashArray: "5, 8",
@@ -54,9 +67,9 @@ var muralLayer = new L.geoJson(null, {
   pointToLayer: function(feature, latlng) {
     return L.circleMarker(latlng, {
       radius: 8,
-      fillColor: "#75EDFE",
+      fillColor:"#DC143C",
       color: "#000",
-      weight: 1,
+      weight: 1.5,
       opacity: 1,
       fillOpacity: 0.8
     });
@@ -173,6 +186,20 @@ map.on('popupclose', function() {
   $('.mural-img').removeClass('active')
 });
 
+/*change basemap' to aerial beyond certain zoom*/
+map.on('zoom',function() {
+  var currentZoom = map.getZoom();
+  if (currentZoom > 13 ) {
+    map.removeLayer(cdblight);
+    esri.addTo(map);
+    labels.addTo(map);
+  }
+  if (currentZoom < 14) {
+    map.removeLayer(esri);
+    map.removeLayer(labels);
+    cdblight.addTo(map);
+  }
+});
 
 /*Checks lat/long on map
 map.on('click',function(e){
