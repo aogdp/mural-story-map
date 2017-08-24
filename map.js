@@ -203,7 +203,8 @@ map.on('zoom',function() {
   }
 });
 
-/*Checks lat/long on map*/
+/*Checks lat/long on map
 map.on('click',function(e){
   alert("Lat:" + e.latlng.lat + "long:" + e.latlng.lng)
 });
+*/
