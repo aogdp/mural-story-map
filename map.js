@@ -90,6 +90,7 @@ var muralLayer = new L.geoJson(null, {
       var thumbUrl = "images/thumbnails/" + imageUrl;
       var layerx = layer.getLatLng().Latitude;
       var layery = layer.getLatLng().Longitude;
+      console.log(layer.getLatLng());
       var name = feature.properties.Name;
       var id = feature.properties.id;
       /*console.log(id);*/
