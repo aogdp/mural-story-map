@@ -6,12 +6,14 @@ var map = new L.Map('map', {
   maxBounds: [[45.84, -90.38],[35.02,-74.73]],
 });
 
-/* OSM B&W Basemap no longer used NK update 8-9-17
+/* OSM  B&W Basemap no longer used NK update 8-9-17
 var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
 });
 */
+
+var layerx,layery;
 
 var cdblight = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
@@ -81,19 +83,19 @@ var muralLayer = new L.geoJson(null, {
     if (feature.properties.filename) {
       feature.properties.id = x;
       x = x+1;
-/*      console.log('getting info');*/
+/*console.log('getting info');*/
       var image = feature.properties.filename;
       var imageUrl = encodeURI(image);
       /*console.log(imageUrl);*/
       var url = "images/compressed/" + imageUrl;
       /*console.log(url);*/
       var thumbUrl = "images/thumbnails/" + imageUrl;
-      var layerx = layer.getLatLng().Latitude;
-      var layery = layer.getLatLng().Longitude;
       var name = feature.properties.Name;
       var id = feature.properties.id;
-      /*console.log(id);*/
-      layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + layerx + ',' + layery + '" target="_blank">Directions</a></span></a></li>',
+      var lat = feature.geometry.coordinates[1];
+      var lng = feature.geometry.coordinates[0];
+    /*  console.log(id); */
+      layer.bindPopup('<img src="' + url + '" style="width:300px;padding:10px 0;"><br/><h4>' + name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + lat + ',' + lng + '" target="_blank">Directions</a></span></a></li>',
        {
         minWidth: 310,
         maxHeight: 280,
@@ -203,7 +205,8 @@ map.on('zoom',function() {
   }
 });
 
-/*Checks lat/long on map*/
+/*Checks lat/long on map
 map.on('click',function(e){
   alert("Lat:" + e.latlng.lat + "long:" + e.latlng.lng)
 });
+*/
