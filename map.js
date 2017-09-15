@@ -2,7 +2,7 @@ var map = new L.Map('map', {
   zoom: 8,
   fullscreenControl: true,
   center: [39.3, -82.3],
-  minZoom: 7,
+  minZoom: 8,
   maxBounds: [
     [45.84, -90.38],
     [35.02, -74.73]
