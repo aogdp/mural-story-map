@@ -62,54 +62,6 @@ var appalachiaData = omnivore.geojson("Ohio_Appalachian_Region.geojson", null, a
 
 var x = 0;
 
-/*GeoJSON layer to hold the mural locations*/
-var muralLocations = new L.geoJson(null, {
-  pointToLayer: function(feature, latlng) {
-    return L.circleMarker(latlng, {
-      radius: 8,
-      fillColor: "#DC143C",
-      color: "#000",
-      weight: 1.5,
-      opacity: 1,
-      fillOpacity: 0.8
-    });
-  },
-  onEachFeature: function(feature, layer) {
-    /*feature.properties && feature.properties.Title && feature.properties.Location*/
-    if (feature.properties.filename) {
-      var image = feature.properties.filename;
-      var imageUrl = encodeURI(image);
-      /*console.log(imageUrl);*/
-      var url = "images/compressed/" + imageUrl;
-      /*console.log(url);*/
-      var thumbUrl = "images/thumbnails/" + imageUrl;
-      var name = feature.properties.Name;
-      var id = feature.properties.fileid;
-      var lat = feature.geometry.coordinates[1];
-      var lng = feature.geometry.coordinates[0];
-      var imageLink = feature.properties.Link;
-      /*  console.log(id); */
-      layer.bindPopup('<a href="' + imageLink + '" target="_blank"><img src="' + url + '" style="width:300px;padding:10px 0;"></a><br/><h4>' + name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + lat + ',' + lng + '" target="_blank">Directions</a></span></a></li>', {
-        minWidth: 310,
-        maxHeight: 280,
-      });
-      //var id = feature.properties.ID;
-      var title = feature.properties.Name;
-      //console.log(id);
-      $("#content-6").mThumbnailScroller({
-        type: "click-25",
-        callbacks: {
-          onScroll: function() {
-            console.log("scroll completed");
-          }
-        },
-        /*change to "y" for vertical scroller*/
-      });
-      $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + thumbUrl + '" title="' + name + '" height=166px class="mTSThumb" />');
-    }
-  }
-});
-
 /*cluster for mural locations*/
 var muralLocationsCluster = new L.markerClusterGroup({
   disableClusteringAtZoom: 12,
@@ -117,21 +69,6 @@ var muralLocationsCluster = new L.markerClusterGroup({
   spiderfyOnMaxZoom: false,
   maxClusterRadius: 40
 }).addTo(map);
-
-/*scroll to image if one exists when mural point is clicked*/
-muralLocations.on('click', function(e) {
-  console.log(e);
-  $(".mural-img").removeClass('active');
-  var muralid = e.layer.feature.properties.id;
-  $("#content-6").mThumbnailScroller("scrollTo", "#" + muralid, {
-    easing: "easeInOutStrong",
-    speed: 1000,
-    callbacks: true
-  });
-  setTimeout(function() {
-    $("#" + muralid).addClass('active');
-  }, 100);
-});
 
 /*clear active from all mural images on map click or popup close*/
 map.on('click', function() {
@@ -176,7 +113,16 @@ function buildMap() {
       var geojson = GeoJSON.parse(data, {
         Point: ['Latitude', 'Longitude']
       });
-      var muralLocationsData = new L.geoJson(geojson, {
+      $("#content-6").mThumbnailScroller({
+        type: "click-50",
+        callbacks: {
+          onScroll: function() {
+            console.log("scroll completed");
+          }
+        },
+        /*change to "y" for vertical scroller*/
+      });
+      var muralLocations = new L.geoJson(geojson, {
         pointToLayer: function(feature, latlng) {
           return new L.circleMarker(latlng, {
             radius: 8,
@@ -204,15 +150,6 @@ function buildMap() {
 
             var title = feature.properties.Name;
             //console.log(id);
-            $("#content-6").mThumbnailScroller({
-              type: "click-25",
-              callbacks: {
-                onScroll: function() {
-                  console.log("scroll completed");
-                }
-              },
-              /*change to "y" for vertical scroller*/
-            });
             $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + thumbUrl + '" title="' + name + '" height=166px class="mTSThumb" />');
             /**/
             var popup = "<iframe src='https://drive.google.com/file/d/" + layer.feature.properties.fileid + "/preview' width='320' height='240' frameborder='0'></iframe> \
@@ -226,7 +163,7 @@ function buildMap() {
         }
       });
       //muralPoints.addLayer(points);
-      muralLocationsData.on('click', function(e) {
+      muralLocations.on('click', function(e) {
         console.log(e);
         $(".mural-img").removeClass('active');
         var muralid = e.layer.feature.properties.fileid;
@@ -239,7 +176,7 @@ function buildMap() {
           $("#" + muralid).addClass('active');
         }, 100);
       });
-      muralLocationsCluster.addLayer(muralLocationsData);
+      muralLocationsCluster.addLayer(muralLocations);
 
       setTimeout(function() {
         $("#loader").fadeOut();
@@ -260,7 +197,7 @@ function buildMap() {
 
         console.log(clickID);
 
-        muralLocationsData.eachLayer(function(layer) {
+        muralLocations.eachLayer(function(layer) {
           if ((layer.feature.properties.fileid) == clickID) {
             map.flyTo(layer.getLatLng(), 15);
             var click = 1;
