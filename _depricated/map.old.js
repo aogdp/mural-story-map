@@ -3,10 +3,7 @@ var map = new L.Map('map', {
   fullscreenControl: true,
   center: [39.3, -82.3],
   minZoom: 7,
-  maxBounds: [
-    [45.84, -90.38],
-    [35.02, -74.73]
-  ],
+  maxBounds: [[45.84, -90.38],[35.02,-74.73]],
 });
 
 /* OSM  B&W Basemap no longer used NK update 8-9-17
@@ -16,7 +13,7 @@ var OpenStreetMap_BlackAndWhite = L.tileLayer('https://{s}.tile.openstreetmap.fr
 });
 */
 
-var layerx, layery;
+var layerx,layery;
 
 var cdblight = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
@@ -48,26 +45,33 @@ var labels = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/lig
 
 //Define style & Load Appalachian Counties outline
 var appalachia = L.geoJson(null, {
-  style: {
-    color: '#D2B48C',
-    weight: 3,
-    opacity: 0.5,
-    fillOpacity: 0.1,
-    interactive: false,
-    dashArray: "5, 8",
-  }
+    style: {
+      color: '#D2B48C',
+      weight: 3,
+      opacity: 0.5,
+      fillOpacity: 0.1,
+      interactive: false,
+      dashArray: "5, 8",
+    }
 }).addTo(map);
 
-var appalachiaData = omnivore.geojson("Ohio_Appalachian_Region.geojson", null, appalachia);
+var appalachiaData = omnivore.geojson("Ohio_Appalachian_Region.geojson",null, appalachia);
 
+/*Load with AJAX Plugin*/
+/*var appalachiaData2 = new L.geoJSON.ajax("Ohio_Appalachian_Region.geojson", {
+  style: {
+    color: "purple",
+  }
+})
+.addTo(map);
+*/
 var x = 0;
-
-/*GeoJSON layer to hold the mural locations*/
-var muralLocations = new L.geoJson(null, {
+//GeoJson layer to hold the csv data
+var muralLayer = new L.geoJson(null, {
   pointToLayer: function(feature, latlng) {
     return L.circleMarker(latlng, {
       radius: 8,
-      fillColor: "#DC143C",
+      fillColor:"#DC143C",
       color: "#000",
       weight: 1.5,
       opacity: 1,
@@ -77,6 +81,9 @@ var muralLocations = new L.geoJson(null, {
   onEachFeature: function(feature, layer) {
     /*feature.properties && feature.properties.Title && feature.properties.Location*/
     if (feature.properties.filename) {
+//      feature.properties.id = x;
+//      x = x+1;
+/*console.log('getting info');*/
       var image = feature.properties.filename;
       var imageUrl = encodeURI(image);
       /*console.log(imageUrl);*/
@@ -88,8 +95,9 @@ var muralLocations = new L.geoJson(null, {
       var lat = feature.geometry.coordinates[1];
       var lng = feature.geometry.coordinates[0];
       var imageLink = feature.properties.Link;
-      /*  console.log(id); */
-      layer.bindPopup('<a href="' + imageLink + '" target="_blank"><img src="' + url + '" style="width:300px;padding:10px 0;"></a><br/><h4>' + name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + lat + ',' + lng + '" target="_blank">Directions</a></span></a></li>', {
+    /*  console.log(id); */
+      layer.bindPopup('<a href="' + imageLink + '" target="_blank"><img src="' + url + '" style="width:300px;padding:10px 0;"></a><br/><h4>' + name + '</h4>' + feature.properties.Message + '<br /><span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + lat + ',' + lng + '" target="_blank">Directions</a></span></a></li>',
+       {
         minWidth: 310,
         maxHeight: 280,
       });
@@ -98,10 +106,10 @@ var muralLocations = new L.geoJson(null, {
       //console.log(id);
       $("#content-6").mThumbnailScroller({
         type: "click-25",
-        callbacks: {
-          onScroll: function() {
-            console.log("scroll completed");
-          }
+        callbacks:{
+            onScroll:function(){
+              console.log("scroll completed");
+            }
         },
         /*change to "y" for vertical scroller*/
       });
@@ -110,16 +118,18 @@ var muralLocations = new L.geoJson(null, {
   }
 });
 
-/*cluster for mural locations*/
-var muralLocationsCluster = new L.markerClusterGroup({
-  disableClusteringAtZoom: 12,
+var muralCluster = new L.markerClusterGroup({
+  disableClusteringAtZoom: 13,
   zoomToBoundsOnClick: true,
   spiderfyOnMaxZoom: false,
-  maxClusterRadius: 40
+  maxClusterRadius: 60
 }).addTo(map);
 
-/*scroll to image if one exists when mural point is clicked*/
-muralLocations.on('click', function(e) {
+/*CSV LOAD- Features via omnivore and add them to the mural layer*/
+var muraldata = omnivore.csv('murals.csv', null, muralLayer);
+
+/*scroll to image when mural point is clicked*/
+muralLayer.on('click', function(e) {
   console.log(e);
   $(".mural-img").removeClass('active');
   var muralid = e.layer.feature.properties.id;
@@ -133,6 +143,50 @@ muralLocations.on('click', function(e) {
   }, 100);
 });
 
+/*Wait for the data to be loaded before doing a few other things.*/
+muraldata.on('ready', function() {
+  console.log(muraldata);
+  setTimeout(function() {
+    $("#loader").fadeOut();
+  },2000);
+  //muralLayer.addTo(map);
+  console.log('mural data ready');
+  /*console.log(muralLayer);
+  console.log(muraldata);*/
+  /*map.fitBounds(muralLayer.getBounds(), {maxZoom: 8});*/
+  //muralCluster.addLayer(muralLayer);
+  muralCluster.on('clusterclick', function(e) {
+    console.log(e);
+    map.flyTo(e.layer.getLatLng(), 14, {duration: 2})
+  });
+  /*assign a click event to the mural images*/
+  $(".mural-img").click(function() {
+    $(".mural-img").removeClass('active');
+    map.closePopup();
+    var clickID = "";
+    clickID = $(this).prop('id');
+
+    console.log(clickID);
+
+    muralLayer.eachLayer(function(layer) {
+      if ((layer.feature.properties.fileid) == clickID) {
+        map.flyTo(layer.getLatLng(), 15);
+        var click = 1;
+        map.on('moveend', function() {
+          if (click === 1) {
+            layer.openPopup();
+          }
+        });
+        layer.on('popupopen', function() {
+          click = 2
+          $("#" + clickID).addClass('active');
+        });
+      }
+    });
+    click = 2;
+  });
+});
+
 /*clear active from all mural images on map click or popup close*/
 map.on('click', function() {
   $('.mural-img').removeClass('active')
@@ -143,14 +197,14 @@ map.on('popupclose', function() {
 });
 
 /*change basemap' to aerial beyond certain zoom*/
-map.on('zoom', function() {
+map.on('zoom',function() {
   var currentZoom = map.getZoom();
-  if (currentZoom > 15) {
+  if (currentZoom > 13 ) {
     map.removeLayer(cdblight);
     esri.addTo(map);
     labels.addTo(map);
   }
-  if (currentZoom < 16) {
+  if (currentZoom < 14) {
     map.removeLayer(esri);
     map.removeLayer(labels);
     cdblight.addTo(map);
@@ -173,14 +227,13 @@ function buildMap() {
     callback: function(data, tabletop) {
       console.log(data);
       //create a geojson out of the raw data with geojson.min
-      var geojson = GeoJSON.parse(data, {
-        Point: ['Latitude', 'Longitude']
-      });
-      var muralLocationsData = new L.geoJson(geojson, {
+      var muralPointData = GeoJSON.parse(data, {Point: ['Latitude', 'Longitude']});
+      console.log(muralPointData);
+      var points = new L.geoJson(muralPointData, {
         pointToLayer: function(feature, latlng) {
           return new L.circleMarker(latlng, {
             radius: 8,
-            fillColor: "#DC143C",
+            fillColor:"#DC143C",
             color: "#000",
             weight: 1.5,
             opacity: 1,
@@ -188,96 +241,36 @@ function buildMap() {
           });
         },
         onEachFeature: function(feature, layer) {
-          /**/
-          if (feature.properties.filename) {
-            var image = feature.properties.filename;
-            var imageUrl = encodeURI(image);
-            /*console.log(imageUrl);*/
-            var url = "images/compressed/" + imageUrl;
-            /*console.log(url);*/
-            var thumbUrl = "images/thumbnails/" + imageUrl;
-            var name = feature.properties.Name;
-            var id = feature.properties.fileid;
-            var lat = feature.geometry.coordinates[1];
-            var lng = feature.geometry.coordinates[0];
-            var imageLink = feature.properties.Link;
-
-            var title = feature.properties.Name;
-            //console.log(id);
-            $("#content-6").mThumbnailScroller({
-              type: "click-25",
-              callbacks: {
-                onScroll: function() {
-                  console.log("scroll completed");
-                }
-              },
-              /*change to "y" for vertical scroller*/
-            });
-            $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + thumbUrl + '" title="' + name + '" height=166px class="mTSThumb" />');
-            /**/
-            var popup = "<iframe src='https://drive.google.com/file/d/" + layer.feature.properties.fileid + "/preview' width='320' height='240' frameborder='0'></iframe> \
-            <br /><h5>" + layer.feature.properties.Name + "</h5>" + layer.feature.properties.Message +
-            '<br><br>span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + lat + ',' + lng + '" target="_blank"><i class="fa fa-external-link"></i>&nbsp;<em>Directions</em></a></span></a>';
-
+            var popup = "<iframe src='https://drive.google.com/file/d/" + layer.feature.properties.fileid +"/preview' width='320' height='240' frameborder='0'></iframe> \
+            <br /><h5>" + layer.feature.properties.Name + "</h5>" + layer.feature.properties.Message;
             layer.bindPopup(popup, {
-              minWidth: 320
+              minWidth:320
             });
-          }
         }
+    });
+    //muralPoints.addLayer(points);
+    points.on('click', function(e) {
+      console.log(e);
+      $(".mural-img").removeClass('active');
+      var muralid = e.layer.feature.properties.fileid;
+      $("#content-6").mThumbnailScroller("scrollTo", "#" + muralid, {
+        easing: "easeInOutStrong",
+        speed: 1000,
+        callbacks: true
       });
-      //muralPoints.addLayer(points);
-      muralLocationsData.on('click', function(e) {
-        console.log(e);
-        $(".mural-img").removeClass('active');
-        var muralid = e.layer.feature.properties.fileid;
-        $("#content-6").mThumbnailScroller("scrollTo", "#" + muralid, {
-          easing: "easeInOutStrong",
-          speed: 1000,
-          callbacks: true
-        });
-        setTimeout(function() {
-          $("#" + muralid).addClass('active');
-        }, 100);
-      });
-      muralLocationsCluster.addLayer(muralLocationsData);
-
       setTimeout(function() {
-        $("#loader").fadeOut();
-      }, 2000);
+        $("#" + muralid).addClass('active');
+      }, 100);
+    });
+    muralCluster.addLayer(points);
 
-      muralLocationsCluster.on('clusterclick', function(e) {
-        console.log(e);
-        map.flyTo(e.layer.getLatLng(), 14, {
-          duration: 2
-        })
-      });
-      /*assign a click event to the mural images*/
-      $(".mural-img").click(function() {
-        $(".mural-img").removeClass('active');
-        map.closePopup();
-        var clickID = "";
-        clickID = $(this).prop('id');
-
-        console.log(clickID);
-
-        muralLocationsData.eachLayer(function(layer) {
-          if ((layer.feature.properties.fileid) == clickID) {
-            map.flyTo(layer.getLatLng(), 15);
-            var click = 1;
-            map.on('moveend', function() {
-              if (click === 1) {
-                layer.openPopup();
-              }
-            });
-            layer.on('popupopen', function() {
-              click = 2
-              $("#" + clickID).addClass('active');
-            });
-          }
-        });
-        click = 2;
-      });
-      $("#loader").fadeOut();
-    }
+    $("#fileWarning").html('');
+   }
   });
 }
+
+/*Checks lat/long on map
+map.on('click',function(e){
+  alert("Lat:" + e.latlng.lat + "long:" + e.latlng.lng)
+});
+*/

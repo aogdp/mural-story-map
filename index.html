@@ -32,6 +32,9 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+  <script src="/js/geojson.js"></script>
+  <script src="/js/tabletop.js"></script>
+  <!--script src="/js/sheetsee.js"></script-->
 
   <style>
     #map {
@@ -99,16 +102,20 @@
     #content-6 {
       /*background-color: black;*/
       position: absolute;
-      bottom: 0;
+      bottom: 16px;
       left: 0;
       width: 100%;
       margin: 0;
       height: 200px;
       z-index: 1000;
     }
-
+    .mTSThumbContainer a {
+      color: white;
+    }
     .leaflet-popup-content {
       height: auto!important;
+      /*width: 320px!important;*/
+      max-width:340px;
     }
 
     .leaflet-popup-scrolled {
@@ -116,12 +123,20 @@
     }
     #loader {
       position: absolute;
-      top: 40%;
-      left: 48%;
-      margin: 0 auto;
+      top: 0;
+      width: 100%;
+      bottom: 0;
+      z-index: 9999;
+      background: white;
+    }
+    #loader img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -100px;
+      margin-top:-100px;
       z-index: 9999;
       width: 100px;
-      background: white;
     }
 
     .active {
@@ -135,7 +150,7 @@
 </head>
 
 <body>
-  <!--div id="loader"><img src="images/loader.gif" /></div-->
+  <div id="loader"><img src="images/loader.gif" /></div>
   <div id="map"></div>
   <div id="content-6" class="content">
     <ul id="thumbsList">
