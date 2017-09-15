@@ -217,7 +217,7 @@ function buildMap() {
             /**/
             var popup = "<iframe src='https://drive.google.com/file/d/" + layer.feature.properties.fileid + "/preview' width='320' height='240' frameborder='0'></iframe> \
             <br /><h5>" + layer.feature.properties.Name + "</h5>" + layer.feature.properties.Message +
-            '<br><br>span id = "directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + lat + ',' + lng + '" target="_blank"><i class="fa fa-external-link"></i>&nbsp;<em>Directions</em></a></span></a>';
+            '<br><br><span id="directions"><a href="https://www.google.com/maps/dir//?saddr=My+Location' + '&daddr=' + lat + ',' + lng + '" target="_blank"><i class="fa fa-external-link"></i>&nbsp;<em>Directions</em></a></span></a>';
 
             layer.bindPopup(popup, {
               minWidth: 320
