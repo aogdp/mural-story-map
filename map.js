@@ -150,18 +150,6 @@ function buildMap() {
 
             var title = feature.properties.Name;
             //console.log(id);
-<<<<<<< HEAD
-=======
-            $("#content-6").mThumbnailScroller({
-              type: "click-50",
-              callbacks: {
-                onScroll: function() {
-                  console.log("scroll completed");
-                }
-              },
-              /*change to "y" for vertical scroller*/
-            });
->>>>>>> d63ce3917d3c6d0eca86cf5be0830a83220a77dd
             $("#mTS_1_container").append('<li class="mTSThumbContainer"><a id ="' + id + '" class="mural-img" href="' + '#' + '"><img src="' + thumbUrl + '" title="' + name + '" height=166px class="mTSThumb" />');
             /**/
             var popup = "<iframe src='https://drive.google.com/file/d/" + layer.feature.properties.fileid + "/preview' width='320' height='240' frameborder='0'></iframe> \
