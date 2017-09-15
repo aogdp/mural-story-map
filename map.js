@@ -205,7 +205,7 @@ function buildMap() {
             var title = feature.properties.Name;
             //console.log(id);
             $("#content-6").mThumbnailScroller({
-              type: "click-25",
+              type: "click-50",
               callbacks: {
                 onScroll: function() {
                   console.log("scroll completed");
